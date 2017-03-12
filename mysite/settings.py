@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     # third party
-    'djobberbase.apps.DjobberConfig',
+#    'djobberbase.apps.DjobberConfig',
+    'jobportal.apps.JobportalConfig'
 
     #'djobberbase.models.Category',
     #'djobberbase.models.Type',

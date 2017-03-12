@@ -3,9 +3,12 @@
 from django.shortcuts import get_object_or_404, redirect, render_to_response
 from djobberbase.models import Job, Category, Type, JobStat, JobSearch, City
 from djobberbase.postman import *
-from django.views.generic.list_detail import object_detail, object_list
-from django.views.generic.create_update import create_object, update_object
-from django.core.context_processors import csrf
+#from django.views.generic.list_detail import object_detail, object_list
+#from django.views.generic import list_detail
+from django.views.generic.list import ListView
+#from django.views.generic.create_update import create_object, update_object
+#from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
@@ -16,13 +19,13 @@ from django.db.models import Count
 from django.http import Http404
 
 def job_detail(request, job_id, joburl):
-    ''' Displays an active job and its application form depending if 
+    ''' Displays an active job and its application form depending if
         the job has online applications or not. Handles the job applications
         and sends notifications emails.
     '''
-    try:        
+    try:
         job = Job.active.get(pk=job_id, joburl=joburl)
-        extra_context = {'page_type':'detail', 
+        extra_context = {'page_type':'detail',
                'cv_extensions': djobberbase_settings.DJOBBERBASE_CV_EXTENSIONS,
                'markup_lang': djobberbase_settings.DJOBBERBASE_MARKUP_LANGUAGE}
 
@@ -32,7 +35,7 @@ def job_detail(request, job_id, joburl):
         # Gets poster ip
         ip = getIP(request)
 
-        # Only if the job has online applications ON and application 
+        # Only if the job has online applications ON and application
         # notifications are activated can the user apply online
         mb = minutes_between()
         if job.apply_online and djobberbase_settings.\
@@ -45,8 +48,8 @@ def job_detail(request, job_id, joburl):
             if request.method == 'POST':
 
                 # Gets the application
-                form = ApplicationForm(request.POST, 
-                                       request.FILES, 
+                form = ApplicationForm(request.POST,
+                                       request.FILES,
                                        applicant_data={'ip':ip, 'mb':mb})
 
                 # If the form is OK then send it to the job poster
@@ -57,16 +60,17 @@ def job_detail(request, job_id, joburl):
                     #Save JobStat application
                     ja = JobStat(job=job, ip=ip, stat_type='A')
                     ja.save()
-                    messages.add_message(request, 
-                                messages.INFO, 
+                    messages.add_message(request,
+                                messages.INFO,
                                 _('Your application was sent successfully.'))
                     extra_context['page_type'] = 'application'
                     queryset = Job.active.filter(joburl=joburl)
-                    return object_detail(request, queryset=queryset,
+                    #return object_detail(request, queryset=queryset,
+                    return ListView.as_view(request, queryset=queryset,
                                         object_id=job_id,
                                         extra_context=extra_context)
                 else:
-                    extra_context['form_error'] = True 
+                    extra_context['form_error'] = True
 
             # Else create an empty application form
             else:
@@ -84,7 +88,7 @@ def job_detail(request, job_id, joburl):
                                 object_id=job_id,
                                 extra_context=extra_context)
 
-    # Instead of throwing a 404 error redirect to job unavailable page 
+    # Instead of throwing a 404 error redirect to job unavailable page
     except Job.DoesNotExist:
         return redirect('djobberbase_job_unavailable', permanent=True)
 
@@ -92,11 +96,11 @@ def job_verify(request, job_id, auth):
     ''' A view to display a newly created job.
     '''
     queryset = Job.objects.filter(auth=auth)
-    # Setting page_type as 'verify' in order to 
+    # Setting page_type as 'verify' in order to
     # show edit and cancelation buttons in the template
-    extra_context = {'page_type':'verify', 
+    extra_context = {'page_type':'verify',
                'markup_lang': djobberbase_settings.DJOBBERBASE_MARKUP_LANGUAGE}
-    return object_detail(request, queryset=queryset, 
+    return object_detail(request, queryset=queryset,
                             object_id=job_id, extra_context=extra_context)
 
 def jobs_category(request, cvar_name=None, tvar_name=None):
@@ -126,7 +130,7 @@ def jobs_in_city(request, city_name, tvar_name=None):
     if tvar_name:
         jobtype = get_object_or_404(Type, var_name=tvar_name)
         queryset = queryset.filter(jobtype=jobtype)
-        extra_context['selected_jobtype'] = jobtype                     
+        extra_context['selected_jobtype'] = jobtype
     return object_list(request, queryset=queryset,
                     extra_context=extra_context,
                     paginate_by=djobberbase_settings.DJOBBERBASE_JOBS_PER_PAGE)
@@ -153,7 +157,7 @@ def jobs_at(request, company_slug, tvar_name=None):
     if tvar_name:
         jobtype = get_object_or_404(Type, var_name=tvar_name)
         queryset = queryset.filter(jobtype=jobtype)
-        extra_context['selected_jobtype'] = jobtype    
+        extra_context['selected_jobtype'] = jobtype
     return object_list(request, queryset=queryset)
 
 def job_confirm(request, job_id, auth):
@@ -168,22 +172,22 @@ def job_confirm(request, job_id, auth):
     requires_mod = not job.email_published_before() and \
                  djobberbase_settings.DJOBBERBASE_ENABLE_NEW_POST_MODERATION
     if requires_mod:
-        messages.add_message(request, 
-                       messages.INFO, 
+        messages.add_message(request,
+                       messages.INFO,
                        _('Your job post needs to be verified by a moderator.'))
         if djobberbase_settings.DJOBBERBASE_POSTER_NOTIFICATIONS:
             pending_email = MailPublishPendingToUser(job, request)
             pending_email.start()
     else:
-        messages.add_message(request, 
-                             messages.INFO, 
+        messages.add_message(request,
+                             messages.INFO,
                              _('Your job post has been published.'))
         if not job.is_active():
             job.activate()
         if new_post:
             if djobberbase_settings.DJOBBERBASE_POSTER_NOTIFICATIONS:
                 publish_email = MailPublishToUser(job, request)
-                publish_email.start()    
+                publish_email.start()
     queryset = Job.objects.all()
     if djobberbase_settings.DJOBBERBASE_ADMIN_NOTIFICATIONS:
         admin_email = MailPublishToAdmin(job, request)
@@ -191,7 +195,7 @@ def job_confirm(request, job_id, auth):
     return object_detail(request, queryset=queryset,
                          object_id=job_id,
                          extra_context={'page_type':'confirm'})
-                         
+
 def job_edit(request, job_id, auth):
     ''' A view for editing published or unpublished job posts.
     '''
@@ -213,23 +217,23 @@ def job_activate(request, job_id, auth):
         if djobberbase_settings.DJOBBERBASE_POSTER_NOTIFICATIONS:
             publish_email = MailPublishToUser(job, request)
             publish_email.start()
-        messages.add_message(request, 
-                             messages.INFO, 
+        messages.add_message(request,
+                             messages.INFO,
                              _('Your job has been activated.'))
         extra_context['page_type'] = 'activate'
     queryset=Job.active.all()
-    return object_detail(request, queryset=queryset, 
+    return object_detail(request, queryset=queryset,
                             object_id=job_id, extra_context=extra_context)
 
 def job_deactivate(request, job_id, auth):
-    ''' Deactivates a job and shows an active jobs list.    
+    ''' Deactivates a job and shows an active jobs list.
     '''
     job = get_object_or_404(Job, pk=job_id, auth=auth)
     extra_context={}
     if job.is_active() or job.is_temporary():
         job.deactivate()
-        messages.add_message(request, 
-                             messages.INFO, 
+        messages.add_message(request,
+                             messages.INFO,
                              _('Your job has been deactivated.'))
         extra_context['page_type'] = 'deactivate'
     queryset=Job.active.all()
