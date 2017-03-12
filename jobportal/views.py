@@ -2,7 +2,7 @@
 #from django.http import HttpResponseRedirect, HttpResponse
 
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 #from django.urls import reverse
 #from django.views import generic
 
@@ -26,15 +26,17 @@ def index(request):
     return render(request, 'jobportal/index.html', context)
 
 def employer(request, employer_id):
-    try:
-        employer = Employer.objects.get(pk=employer_id)
-    except Employer.DoesNotExist:
-        raise Http404("Employer does not exist")
+    #try:
+    #    employer = Employer.objects.get(pk=employer_id)
+    #except Employer.DoesNotExist:
+    #    raise Http404("Employer does not exist")
+
     return render(request, 'jobportal/employer.html', {'employer':employer})
 
 def job(request, job_id):
-    try:
-        job = Job.objects.get(pk=job_id)
-    except Job.DoesNotExist:
-        raise Http404("Job does not exist")
+    #try:
+    #    job = Job.objects.get(pk=job_id)
+    #except Job.DoesNotExist:
+    #    raise Http404("Job does not exist")
+    job = get_object_or_404(Job, pk=job_id)
     return render(request, 'jobportal/job.html', {'job':job})
