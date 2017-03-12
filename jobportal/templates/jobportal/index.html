@@ -8,6 +8,7 @@
         <li><a href="{% url 'jobportal:job' job.id %}">{{ job.name }}</a></li>
     {% endfor %}
     </ul>
+    <a href="{% url 'jobportal:job-add' %}">add a job</a>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
