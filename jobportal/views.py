@@ -95,7 +95,45 @@ class JobFormView(generic.View):
 
             return redirect('jobportal:index')
 
+class UserFormView(generic.View):
+    form_class = UserForm
+    template_name = 'jobportal/registration_form.html'
 
+    # display blank form
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    # process form data
+    def post(self, request):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            # creates object from form but doesn't go into database
+            user = form.save(commit=False)
+            #job.pub_date = models.DateTimeField(default=datetime.now, blank=True)
+            # cleaned (normalized) data
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user.set_password(password)
+        #    pub_date =
+            #job.pub
+            user.save()
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                # if user is not banned or made inactive
+                if user.is_active:
+                    login(request, user)
+
+                    #to printout username do
+                    #request.user.username
+
+                    return redirect('jobportal:index')
+
+        # if login failed
+        return render(request, self.template_name, {'form':form})
 
 def apply(request, jobseeker_id):
     job = get_object_or_404(Job, pk=job_id)
