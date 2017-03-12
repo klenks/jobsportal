@@ -4,6 +4,7 @@
         {% comment %}
         <li><a href="/jobportal/job/{{ job.id }}/">{{ job.name }}</a></li>
         {% endcomment %}
+
         <li><a href="{% url 'jobportal:job' job.id %}">{{ job.name }}</a></li>
     {% endfor %}
     </ul>

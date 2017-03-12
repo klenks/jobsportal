@@ -20,9 +20,9 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^$', include('jobportal.urls')),
+    #url(r'^$', include('jobportal.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^jobportal', include('jobportal.urls'))
+    url(r'^jobportal/', include('jobportal.urls'))
 
     #,
     #url(r'^djobberbase', include('djobberbase.urls'))

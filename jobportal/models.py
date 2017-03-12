@@ -32,3 +32,12 @@ class Job(models.Model):
 
     def __str__(self):
         return self.name
+
+@python_2_unicode_compatible
+class JobApplication(models.Model):
+    name = models.CharField(max_length=200)
+    #title = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+    def __str__(self):
+        return self.name
