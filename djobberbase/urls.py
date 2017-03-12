@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import *
+#from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url, include
 from djobberbase.models import Job, Category, Type, City
 from djobberbase.conf import settings as djobberbase_settings
 from djobberbase.feeds import LatestJobsFeed
@@ -17,31 +18,32 @@ urlpatterns = patterns('django.views.generic',
 
     #An index view
     url(r'^$',
-        'list_detail.object_list', 
-        { 'queryset': Job.active.all(),          
+        #'list_detail.object_list',
+        'list.ListView',
+        { 'queryset': Job.active.all(),
           'extra_context': {'page_type': 'index'},
           'paginate_by': djobberbase_settings.DJOBBERBASE_JOBS_PER_PAGE},
         name='djobberbase_job_list'),
-    
-    #Cities view    
+
+    #Cities view
     url(r'^'+djobberbase_settings.DJOBBERBASE_CITIES_URL+'/$',
-        'list_detail.object_list', 
+        'list_detail.object_list',
         { 'queryset': City.objects.all(),
-          'extra_context': {'page_type': 'cities', 
+          'extra_context': {'page_type': 'cities',
                     'other_cities_total': Job.active.filter(city=None).count}},
         name='djobberbase_cities_list'),
 
     #post new job
     url(r'^'+djobberbase_settings.DJOBBERBASE_POST_URL+'/$',
-        'create_update.create_object', 
-        { 'form_class': form_class, 
+        'create_update.create_object',
+        { 'form_class': form_class,
           'post_save_redirect': '../'+
           djobberbase_settings.DJOBBERBASE_VERIFY_URL+'/%(id)d/%(auth)s/'},
         name='djobberbase_job_post'),
 
     #job unavailable
     url(r'^'+djobberbase_settings.DJOBBERBASE_UNAVAILABLE_URL+'/$',
-        'simple.direct_to_template', 
+        'simple.direct_to_template',
         {'template': 'djobberbase/unavailable.html'},
         name='djobberbase_job_unavailable'),
 )
@@ -51,7 +53,7 @@ urlpatterns += patterns('',
     #verify job
     url(r'^'+djobberbase_settings.DJOBBERBASE_VERIFY_URL+
         '/(?P<job_id>\d+)/(?P<auth>[-\w]+)/$',
-        'djobberbase.views.job_verify', 
+        'djobberbase.views.job_verify',
         name='djobberbase_job_verify'),
 
     #all jobs
@@ -65,18 +67,18 @@ urlpatterns += patterns('',
         'djobberbase.views.jobs_category',
         name='djobberbase_job_list_category'),
 
-    #all jobs with category and job type    
+    #all jobs with category and job type
     url(r'^'+djobberbase_settings.DJOBBERBASE_JOBS_URL+
         '/(?P<cvar_name>[-\w]+)/(?P<tvar_name>[-\w]+)/$',
         'djobberbase.views.jobs_category',
         name='djobberbase_job_list_category_type'),
 
-    #Job detail    
+    #Job detail
     url(r'^'+djobberbase_settings.DJOBBERBASE_JOB_URL+
         '/(?P<job_id>\d+)/(?P<joburl>[-\w]+)/$',
         'djobberbase.views.job_detail',
         name='djobberbase_job_detail'),
-        
+
     #Jobs in city view
     url(r'^'+djobberbase_settings.DJOBBERBASE_JOBS_IN_URL+
         '/(?P<city_name>[-\w]+)/$',

@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 from django.utils.encoding import smart_str, force_unicode
-from django.utils.translation import ugettext_lazy as _
+#from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext as _
 from django import VERSION as django_version
 
-from djobberbase.helpers import last_hour, getIP
+#from djobberbase.helpers import last_hour, getIP
 from djobberbase.managers import ActiveJobsManager, TempJobsManager
-from djobberbase.conf import settings as djobberbase_settings
+#from djobberbase.conf import settings as djobberbase_settings
 
 import datetime
 import uuid
@@ -22,7 +24,7 @@ try:
 except ImportError:
     from md5 import md5
 
-
+@python_2_unicode_compatible
 class Category(models.Model):
     ''' The Category model, very straight forward. Includes a get_total_jobs
         method that returns the total of jobs with that category.
@@ -62,7 +64,10 @@ class Category(models.Model):
             self.var_name = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
 
+@python_2_unicode_compatible
 class Type(models.Model):
     ''' The Type model, nothing special, just the name and
         var_name fields. Again, the var_name is slugified by the overriden
@@ -83,7 +88,10 @@ class Type(models.Model):
             self.var_name = slugify(self.name)
         super(Type, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
 
+@python_2_unicode_compatible
 class City(models.Model):
     ''' A model for cities, with a get_total_jobs method to get
         the total of jobs in that city, save() method is overriden
@@ -107,7 +115,10 @@ class City(models.Model):
             self.ascii_name = slugify(self.name)
         super(City, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
 
+@python_2_unicode_compatible
 class Job(models.Model):
     ''' The basic job model.
     '''
@@ -280,7 +291,10 @@ class Job(models.Model):
 
         super(Job, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
 
+@python_2_unicode_compatible
 class JobStat(models.Model):
     APPLICATION = 'A'
     HIT = 'H'
@@ -295,7 +309,8 @@ class JobStat(models.Model):
     else:
         job = models.ForeignKey(Job)
     created_on = models.DateTimeField(default=datetime.datetime.now())
-    ip = models.IPAddressField()
+    #ip = models.IPAddressField()
+    ip = models.GenericIPAddressField()
     stat_type = models.CharField(max_length=1, choices=STAT_TYPES)
     description = models.CharField(_('Description'), max_length=250)
 
@@ -320,7 +335,10 @@ class JobStat(models.Model):
             self.description = u"Unkwown stat"
         super(JobStat, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
 
+@python_2_unicode_compatible
 class JobSearch(models.Model):
     keywords = models.CharField(_('Keywords'), max_length=100, blank=False)
     created_on = models.DateTimeField(_('Created on'), default=datetime.datetime.now())
@@ -331,3 +349,6 @@ class JobSearch(models.Model):
 
     def __unicode__(self):
         return self.keywords
+
+    def __str__(self):
+        return self.name

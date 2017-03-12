@@ -3,7 +3,7 @@
 import os
 import re
 from django.conf import settings
-from django.core.validators import email_re
+#from django.core.validators import email_re
 from django.core.exceptions import ImproperlyConfigured
 
 # General settings
@@ -57,27 +57,26 @@ DJOBBERBASE_ADMIN_NOTIFICATIONS = getattr(settings, 'DJOBBERBASE_ADMIN_NOTIFICAT
 DJOBBERBASE_POSTER_NOTIFICATIONS = getattr(settings, 'DJOBBERBASE_POSTER_NOTIFICATIONS', False)
 DJOBBERBASE_APPLICATION_NOTIFICATIONS = getattr(settings, 'DJOBBERBASE_APPLICATION_NOTIFICATIONS', False)
 
-DJOBBERBASE_NEW_POST_ADMIN_SUBJECT = getattr(settings, 
-                                    'DJOBBERBASE_NEW_POST_ADMIN_SUBJECT', 
+DJOBBERBASE_NEW_POST_ADMIN_SUBJECT = getattr(settings,
+                                    'DJOBBERBASE_NEW_POST_ADMIN_SUBJECT',
                                     '[ %(site_name)s  ] New job: %(job_title)s')
 
-DJOBBERBASE_EDIT_POST_ADMIN_SUBJECT = getattr(settings, 
-                                    'DJOBBERBASE_EDIT_POST_ADMIN_SUBJECT', 
+DJOBBERBASE_EDIT_POST_ADMIN_SUBJECT = getattr(settings,
+                                    'DJOBBERBASE_EDIT_POST_ADMIN_SUBJECT',
                                     '[ %(site_name)s  ] Edited job: %(job_title)s')
 
-DJOBBERBASE_MAIL_PENDING_SUBJECT = getattr(settings, 
-                                    'DJOBBERBASE_MAIL_PENDING_SUBJECT', 
+DJOBBERBASE_MAIL_PENDING_SUBJECT = getattr(settings,
+                                    'DJOBBERBASE_MAIL_PENDING_SUBJECT',
                                     'Your ad on %(site_name)s')
 
-DJOBBERBASE_MAIL_PUBLISH_SUBJECT = getattr(settings, 
-                                    'DJOBBERBASE_MAIL_PUBLISH_SUBJECT', 
+DJOBBERBASE_MAIL_PUBLISH_SUBJECT = getattr(settings,
+                                    'DJOBBERBASE_MAIL_PUBLISH_SUBJECT',
                                     'Your ad on %(site_name)s was published')
- 
-DJOBBERBASE_MAIL_APPLY_ONLINE_SUBJECT = getattr(settings, 
-                                    'DJOBBERBASE_MAIL_APPLY_ONLINE_SUBJECT', 
+
+DJOBBERBASE_MAIL_APPLY_ONLINE_SUBJECT = getattr(settings,
+                                    'DJOBBERBASE_MAIL_APPLY_ONLINE_SUBJECT',
                                     '[ %(site_name)s ] I wish to apply for %(job_title)s')
 
 
 # Markup settings
 DJOBBERBASE_MARKUP_LANGUAGE = getattr(settings, 'DJOBBERBASE_MARKUP_LANGUAGE', None) #options: 'textile', 'markdown'
-
