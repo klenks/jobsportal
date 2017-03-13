@@ -15,7 +15,7 @@ from django.template import loader
 from datetime import datetime
 
 from .models import JobSeeker, Employer, Job, JobApplication
-from .forms import JobForm, UserForm
+from .forms import JobForm, UserForm, LoginForm
 
 #def IndexView(ListView):
 #    template_name = 'jobportal/index.html'
@@ -130,6 +130,30 @@ class UserFormView(generic.View):
                     #to printout username do
                     #request.user.username
 
+                    return redirect('jobportal:index')
+
+        # if login failed
+        return render(request, self.template_name, {'form':form})
+
+class LoginFormView(generic.View):
+    form_class = LoginForm
+    template_name = 'jobportal/login_form.html'
+
+    # display blank form
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    # process form data
+    def post(self, request):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                # if user is not banned or made inactive
+                if user.is_active:
+                    login(request, user)
                     return redirect('jobportal:index')
 
         # if login failed

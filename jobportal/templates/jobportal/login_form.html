@@ -1,0 +1,11 @@
+<h1>Log in</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h3>Log in to your account</h3>
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+{% include 'jobportal/form-template.html'  %}
+{% comment %}
+<button type="submit" value="Submit" />Apply</button>
+</form>

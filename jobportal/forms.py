@@ -10,6 +10,13 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
 
+class LoginForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+
 class JobForm(forms.ModelForm):
     name = forms.CharField()
 
