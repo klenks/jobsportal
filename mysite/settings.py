@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+# Parse database configuration from $DATABASE_URL
+
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -31,7 +33,7 @@ SECRET_KEY = 'tmfyt)2m9q)sze!k@ahekzdx(kgykp=w87*+vkh#v+@z@&iuz4'
 DEBUG = True
 
 #ALLOWED_HOSTS = []
-ALLOWED_HOSTS[*]
+ALLOWED_HOSTS = ['*']
 
 
 
