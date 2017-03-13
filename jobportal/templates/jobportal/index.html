@@ -1,5 +1,6 @@
 {% if latest_job_list %}
     <ul>
+      <h3>Latest job postings</h3>
     {% for job in latest_job_list %}
         {% comment %}
         <li><a href="/jobportal/job/{{ job.id }}/">{{ job.name }}</a></li>
@@ -8,7 +9,9 @@
         <li><a href="{% url 'jobportal:job' job.id %}">{{ job.name }}</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'jobportal:job-add' %}">add a job</a>
+    <a href="{% url 'jobportal:job-add' %}">Post a job</a>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+<br />
+<a href="{% url 'jobportal:register' %}">Register an account</a>
