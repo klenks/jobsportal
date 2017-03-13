@@ -30,8 +30,8 @@ SECRET_KEY = 'tmfyt)2m9q)sze!k@ahekzdx(kgykp=w87*+vkh#v+@z@&iuz4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS[*]
 
 
 
