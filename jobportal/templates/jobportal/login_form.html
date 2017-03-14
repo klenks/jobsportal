@@ -1,15 +1,29 @@
 {% extends 'jobportal/base.html' %}
 {% block body %}
 
-<h1>Log in</h1>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 col-md-7">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h1>Log in</h1>
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+          {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<h3>Log in to your account</h3>
-<form action="" method="post" enctype="multipart/form-data">
-{% csrf_token %}
-{% include 'jobportal/form-template.html'  %}
-<button type="submit" value="Submit" />Apply</button>
-</form>
+          <h3>Log in to your account</h3>
+          <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% include 'jobportal/form-template.html'  %}
+          <br />
+          <button type="submit" value="Submit" />Apply</button>
+          <br /><br />
+          </form>
+
+          Don't have an account yet? <a href="{% url 'jobportal:register' %}">Sign up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

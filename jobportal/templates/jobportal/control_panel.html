@@ -1,0 +1,40 @@
+{% extends 'jobportal/base.html' %}
+{% block body %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 col-md-7">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h1>Control Panel</h1>
+          <h3>My Stuff</h3>
+          <a href="{% url 'jobportal:resume-add' %}">Add Resume</a>
+          <br />
+          <a href="{% url 'jobportal:my-resumes' %}">My Resumes</a>
+          <br />
+          Add Cover Letter
+          <br />
+          My Cover Letters
+          <br />
+          Logout
+          <br />
+          <h3>Jobs</h3>
+          Jobs by Categories
+          <br />
+          Newest Jobs
+          <br />
+          My Applied Jobs
+          <br />
+          Search Jobs
+          <br />
+          Saved Job Searches
+          <h3>Companies</h3>
+          New Company
+          <br />
+          My Companies
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

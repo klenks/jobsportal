@@ -22,5 +22,8 @@ urlpatterns = [
 
     #url(r'job/add/$', views.JobCreate.as_view(), name='job-add')
 
-    url(r'job/add/$', views.JobFormView.as_view(), name='job-add')
+    url(r'job/add/$', views.JobFormView.as_view(), name='job-add'),
+    url(r'my-resumes/$', views.MyResumesView.as_view(), name='my-resumes'),
+    url(r'my-resumes/add/$', views.ResumeFormView.as_view(), name='resume-add'),
+    url(r'control-panel/$', views.ControlPanelView.as_view(), name='control-panel')
 ]

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django import forms
 
-from .models import Job
+from .models import Job, Resume, Person
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -23,3 +23,11 @@ class JobForm(forms.ModelForm):
     class Meta:
         model = Job
         fields = ['name']
+
+
+class ResumeForm(forms.ModelForm):
+    resume_file = forms.FileField()
+
+    class Meta:
+        model = Resume
+        fields = ['resume_file']

@@ -1,5 +1,8 @@
 {% for field in form %}
-
-  <label>{{ field.label_tag}}</label>
+  <div class="span2">
+    <label>{{ field.label_tag}}</label>
+  </div>
+  <div class="span4">
   {{ field }}
+</div>
 {% endfor %}

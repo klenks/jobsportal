@@ -21,6 +21,8 @@ from django.contrib import admin
 
 from django.conf import settings
 
+from django.conf.urls.static import static
+
 urlpatterns = [
     #url(r'^/$', include('jobportal.urls')),
     url(r'^admin/', admin.site.urls),
@@ -35,3 +37,10 @@ if settings.DEBUG:
     urlpatterns += (
         url(r'^__debug__/', include(debug_toolbar.urls)),
     )
+
+
+
+# apparently when the website is big, files should be stored on a different server
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_URL)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_URL)

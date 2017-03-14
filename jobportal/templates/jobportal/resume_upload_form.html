@@ -1,14 +1,18 @@
 {% extends 'jobportal/base.html' %}
+{% block title %}Job posting{% endblock %}
 {% block body %}
+<h1>Upload Resume</h1>
 
-<h1>{{ job.name }}</h1>
+{% if latest_job_list %}
+    <ul>
+      <h3>Latest job postings</h3>
+    {% for job in latest_job_list %}
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% else %}
+You do not have any resumes uploaded.
+{% endif %}
 
-
-{% comment %}
-<form action="{% url 'jobportal:apply' job.id %}" method="post">
-{% endcomment %}
+Upload new resume
 <form action="" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 {% include 'jobportal/form-template.html'  %}
@@ -19,5 +23,7 @@
 {% endcomment %}
 <button type="submit" value="Submit" />Apply</button>
 </form>
+
+<a href="{% url 'jobportal:control-panel' %}">Back to Control Panel</a>
 
 {% endblock %}

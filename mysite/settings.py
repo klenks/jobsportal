@@ -82,6 +82,7 @@ LOGIN_URL = '/jobportal/login/'
 STRONGHOLD_DEFAULTS = False
 STRONGHOLD_PUBLIC_URLS = (
     '/jobportal/login/',
+    '/jobportal/register/',
     '/admin/'
     #r'^/$'
     #r'^/admin.*?$',  # Don't touch the admin pages
@@ -228,3 +229,7 @@ if DEBUG:
         'HIDE_DJANGO_SQL': False,
         'TAG': 'div',
     }
+
+# for uploading files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

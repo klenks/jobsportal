@@ -10,14 +10,20 @@ from datetime import datetime
 
 from django.utils import timezone
 
+from django.contrib.auth.models import User
+
 # Create your models here.
 @python_2_unicode_compatible
-class User(models.Model):
+class Person(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     join_date = models.DateTimeField('date published')
 
     def __str__(self):
         return self.name
+
+    #def get_absolute_url(self):
+    #    return reverse('jobportal:apply', kwargs={'pk': self.pk})
 
 @python_2_unicode_compatible
 class Company(models.Model):
@@ -28,13 +34,26 @@ class Company(models.Model):
         return self.name
 
 @python_2_unicode_compatible
+class Resume(models.Model):
+    resume_file = models.FileField()
+    owner = models.ForeignKey(Person)
+    #user = models.ForeignKey(User, default=1)
+    pub_date = models.DateTimeField('date published')
+
+    def __str__(self):
+        return owner.name + " resume "+str(pub_date)
+
+@python_2_unicode_compatible
 class Job(models.Model):
     name = models.CharField(max_length=200)
+
     #title = models.CharField(max_length=200)
     #pub_date = models.DateTimeField('date posted')
+
     pub_date = models.DateTimeField(default=datetime.now, blank=True)
-    def get_absolute_url(self):
-        return reverse('jobportal:apply', kwargs={'pk': self.pk})
+
+    #def get_absolute_url(self):
+    #    return reverse('jobportal:apply', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.name

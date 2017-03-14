@@ -19,8 +19,13 @@ from django.conf import settings
 #from django.utils.decorators import method_decorator
 #from stronghold.decorators import public
 
-from .models import User, Company, Job, JobApplication
-from .forms import JobForm, UserForm, LoginForm
+from django.contrib.auth.models import User
+#user = User.objects.get(id=user_id)
+
+from .models import Company, Job, JobApplication, Resume, Person
+from .forms import JobForm, UserForm, LoginForm, ResumeForm
+
+#from django.contrib.auth.models import User
 
 #def IndexView(ListView):
 #    template_name = 'jobportal/index.html'
@@ -139,7 +144,7 @@ class UserFormView(generic.View):
                     #to printout username do
                     #request.user.username
 
-                    return redirect('jobportal:index')
+                    return redirect('jobportal:control-panel')
 
         # if login failed
         return render(request, self.template_name, {'form':form})
@@ -164,17 +169,83 @@ class LoginFormView(generic.View):
     def post(self, request):
         #form = self.form_class(request.POST)
 
-
-        #str("HELLO")
-        #if form.is_valid():
         username = request.POST['username']
         password = request.POST['password']
+        print(username)
         user = authenticate(username=username, password=password)
+        #print("ASASH"+user)
         if user is not None:
             # if user is not banned or made inactive
             if user.is_active:
                 login(request, user)
-                return redirect('jobportal:index')
+
+                #to printout username do
+                #request.user.username
+
+                return redirect('jobportal:control-panel')
+
+        # if login failed
+        return render(request, self.template_name, {'form':form})
+
+class MyResumesView(generic.ListView):
+    #def __init__(self, *args, **kwargs):
+        # you take the user out of kwargs and store it as a class attribute
+    #    self.user = kwargs.pop('user', None)
+    #    super(MyResumesView, self).__init__(*args, **kwargs)
+
+    #form_class = ResumeForm
+
+    context_object_name = 'my-resumes-list'
+    template_name = 'jobportal/my_resumes.html'
+
+    #def get_context_data(self, **kwargs):
+    #    context = super(MyResumesView, self).get_context_data(**kwargs)
+    #    context["userr"] = self.request.user
+    #    return context
+
+    def get_queryset(self):
+        print(type(self.request.user))
+        print(self.request.user)
+        print(Resume.objects.filter(user=self.request.user))
+        print("s")
+        return Resume.objects.filter(user=self.request.user)
+        #return Resume.objects.filter(user=User.objects.filter(name=self.request.user))
+
+class ResumeFormView(generic.CreateView):
+    form_class = ResumeForm
+    template_name = 'jobportal/resume_upload_form.html'
+
+    # display blank form
+    def get(self, request):
+        form = self.form_class(None)
+        #if request.user.is_authenticated():
+    #        return redirect('jobportal:index')
+        #str("HELLO")
+        #HttpResponse(str(var))
+
+        #show_debug_toolbar(request)
+
+        return render(request, self.template_name, {'form': form})
+
+    # process form data
+    def post(self, request):
+        form = self.form_class(request.POST)
+
+
+        if form.is_valid():
+            # creates object from form but doesn't go into database
+            resume = form.save(commit=False)
+            #job.pub_date = models.DateTimeField(default=datetime.now, blank=True)
+            # cleaned (normalized) data
+            #username = form.cleaned_data['username']
+            #password = form.cleaned_data['password']
+            #user.set_password(password)
+            resume.resume_file = form.cleaned_data['resume_file']
+        #    pub_date =
+            #job.pub
+            resume.save()
+
+            return redirect('jobportal:my-resumes')
             #else:
                 # return you are inactive
 
@@ -186,6 +257,15 @@ class LogoutView(generic.View):
     def get(self, request):
         logout(request)
         return redirect('jobportal:index')
+
+class ControlPanelView(generic.View):
+    #model = User
+    template_name = 'jobportal/control_panel.html'
+
+    def get(self, request):
+        #form = self.form_class(None)
+        return render(request, self.template_name)
+
 
 
 def apply(request, jobseeker_id):
