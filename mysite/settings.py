@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     # third party
 #    'djobberbase.apps.DjobberConfig',
     'jobportal.apps.JobportalConfig',
-    #'stronghold'
+    'stronghold'
     #'jobportal'
 
     #'djobberbase.models.Category',
@@ -78,15 +78,15 @@ INSTALLED_APPS = [
 
 #LOGIN_REDIRECT_URL = "/"
 
-#LOGIN_URL = '/jobportal/login/'
-#STRONGHOLD_DEFAULTS = False
-#STRONGHOLD_PUBLIC_URLS = (
-#    '/jobportal/login/',
-#    '/admin/'
+LOGIN_URL = '/jobportal/login/'
+STRONGHOLD_DEFAULTS = False
+STRONGHOLD_PUBLIC_URLS = (
+    '/jobportal/login/',
+    '/admin/'
     #r'^/$'
     #r'^/admin.*?$',  # Don't touch the admin pages
     #r'^/accounts/login/$',  # Avoid redirect loop
-#)
+)
 
 #import django
 #django.setup()
@@ -101,7 +101,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'stronghold.middleware.LoginRequiredMiddleware'
+    'stronghold.middleware.LoginRequiredMiddleware'
     #'jobportal.LoginRequiredMiddleware'
 ]
 
