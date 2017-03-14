@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 #from django.urls import reverse
 from django.views import generic
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from django.views.generic.edit import CreateView
 
@@ -14,16 +14,25 @@ from django.template import loader
 
 from datetime import datetime
 
-from .models import JobSeeker, Employer, Job, JobApplication
+from django.conf import settings
+
+#from django.utils.decorators import method_decorator
+#from stronghold.decorators import public
+
+from .models import User, Company, Job, JobApplication
 from .forms import JobForm, UserForm, LoginForm
 
 #def IndexView(ListView):
 #    template_name = 'jobportal/index.html'
 
+
 class IndexView(generic.ListView):
     template_name = 'jobportal/index.html'
     context_object_name = 'latest_job_list'
 
+    #def get(self, request, *args, **kwargs):
+
+    #@method_decorator(public)
     def get_queryset(self):
         return Job.objects.order_by('-pub_date')[:5]
 
@@ -142,22 +151,42 @@ class LoginFormView(generic.View):
     # display blank form
     def get(self, request):
         form = self.form_class(None)
+        #if request.user.is_authenticated():
+    #        return redirect('jobportal:index')
+        #str("HELLO")
+        #HttpResponse(str(var))
+
+        #show_debug_toolbar(request)
+
         return render(request, self.template_name, {'form': form})
 
     # process form data
     def post(self, request):
-        form = self.form_class(request.POST)
+        #form = self.form_class(request.POST)
 
-        if form.is_valid():
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                # if user is not banned or made inactive
-                if user.is_active:
-                    login(request, user)
-                    return redirect('jobportal:index')
+
+        #str("HELLO")
+        #if form.is_valid():
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # if user is not banned or made inactive
+            if user.is_active:
+                login(request, user)
+                return redirect('jobportal:index')
+            #else:
+                # return you are inactive
 
         # if login failed
         return render(request, self.template_name, {'form':form})
+
+class LogoutView(generic.View):
+
+    def get(self, request):
+        logout(request)
+        return redirect('jobportal:index')
+
 
 def apply(request, jobseeker_id):
     job = get_object_or_404(Job, pk=job_id)

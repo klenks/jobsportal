@@ -66,11 +66,25 @@
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Post job listing
           </a>
         </li>
+        {% if request.user.is_authenticated %}
         <li class="">
-          <a href="#">
+          <span class="navbar-text">
+            Logged in as {{ request.user.get_username }}
+          </span>
+        </li>
+
+        <li class="">
+          <a href="{% url 'jobportal:logout' %}">
             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;Log out
           </a>
         </li>
+        {% else %}
+        <li class="">
+          <a href="{% url 'jobportal:login' %}">
+            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;Log in
+          </a>
+        </li>
+        {% endif %}
       </ul>
     </div>
   </div>

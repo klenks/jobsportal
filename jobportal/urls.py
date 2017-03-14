@@ -12,6 +12,7 @@ urlpatterns = [
 
     url(r'^register/$', views.UserFormView.as_view(), name='register'),
     url(r'^login/$', views.LoginFormView.as_view(), name='login'),
+    url(r'^logout/$', views.LogoutView.as_view(), name='logout'),
 
     url(r'^employer/(?P<employer_id>[0-9]+)/$', views.employer, name='employer'),
 

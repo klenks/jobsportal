@@ -12,7 +12,7 @@ from django.utils import timezone
 
 # Create your models here.
 @python_2_unicode_compatible
-class JobSeeker(models.Model):
+class User(models.Model):
     name = models.CharField(max_length=200)
     join_date = models.DateTimeField('date published')
 
@@ -20,7 +20,7 @@ class JobSeeker(models.Model):
         return self.name
 
 @python_2_unicode_compatible
-class Employer(models.Model):
+class Company(models.Model):
     name = models.CharField(max_length=200)
     join_date = models.DateTimeField('date published')
 

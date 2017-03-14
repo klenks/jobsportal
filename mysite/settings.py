@@ -35,6 +35,18 @@ DEBUG = True
 #ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
 
+#LOGIN_URL = '/login/'
+
+#LOGIN_EXEMPT_URLS = (
+    #r'^about\.html$',
+    #r'^legal/', # allow any URL under /legal/*
+#)
+
+#MIDDLEWARE_CLASSES = (
+    # ...
+    #'python.path.to.LoginRequiredMiddleware',
+#)
+
 
 
 # Application definition
@@ -54,7 +66,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # third party
 #    'djobberbase.apps.DjobberConfig',
-    'jobportal.apps.JobportalConfig'#,
+    'jobportal.apps.JobportalConfig',
+    #'stronghold'
     #'jobportal'
 
     #'djobberbase.models.Category',
@@ -62,6 +75,18 @@ INSTALLED_APPS = [
     #'djobberbase.models.City',
     #'djobberbase.models.Job'
 ]
+
+#LOGIN_REDIRECT_URL = "/"
+
+#LOGIN_URL = '/jobportal/login/'
+#STRONGHOLD_DEFAULTS = False
+#STRONGHOLD_PUBLIC_URLS = (
+#    '/jobportal/login/',
+#    '/admin/'
+    #r'^/$'
+    #r'^/admin.*?$',  # Don't touch the admin pages
+    #r'^/accounts/login/$',  # Avoid redirect loop
+#)
 
 #import django
 #django.setup()
@@ -76,6 +101,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'stronghold.middleware.LoginRequiredMiddleware'
+    #'jobportal.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -164,3 +191,40 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+def show_debug_toolbar(request):
+    return True # Always show toolbar, for example purposes only.
+
+if DEBUG:
+    INTERNAL_IPS = ('127.0.0.1',)
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
+
+    DEBUG_TOOLBAR_PANELS = [
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+    ]
+
+    DEBUG_TOOLBAR_CONFIG = {
+        #'INTERCEPT_REDIRECTS': False,
+        'INTERCEPT_REDIRECTS': False,
+        'SHOW_TOOLBAR_CALLBACK': show_debug_toolbar,
+        #'EXTRA_SIGNALS': ['myproject.signals.MySignal'],
+        'HIDE_DJANGO_SQL': False,
+        'TAG': 'div',
+    }
