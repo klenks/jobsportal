@@ -134,11 +134,15 @@ class UserFormView(generic.View):
             #job.pub
             user.save()
 
+            # TODO i dont know if this should go here or after user.is_active, IDK what that code is doing there. how can save work if let's say it was a duplicate account
+            Person.objects.create(user=user, name=username)
+
             user = authenticate(username=username, password=password)
 
             if user is not None:
                 # if user is not banned or made inactive
                 if user.is_active:
+
                     login(request, user)
 
                     #to printout username do
@@ -206,9 +210,9 @@ class MyResumesView(generic.ListView):
     def get_queryset(self):
         print(type(self.request.user))
         print(self.request.user)
-        print(Resume.objects.filter(user=self.request.user))
+        #print(Resume.objects.filter(user=self.request.user))
         print("s")
-        return Resume.objects.filter(user=self.request.user)
+        return Resume.objects.filter(owner=Person.objects.get(user=self.request.user))
         #return Resume.objects.filter(user=User.objects.filter(name=self.request.user))
 
 class ResumeFormView(generic.CreateView):

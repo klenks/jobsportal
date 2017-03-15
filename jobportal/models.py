@@ -17,7 +17,12 @@ from django.contrib.auth.models import User
 class Person(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    join_date = models.DateTimeField('date published')
+    first_name = models.CharField(max_length=200, blank=True, null=True)
+    last_name = models.CharField(max_length=200, blank=True, null=True)
+    age = models.CharField(max_length=200, blank=True, null=True)
+    #name = models.CharField(max_length=200)
+    # location
+    #join_date = models.DateTimeField('date published')
 
     def __str__(self):
         return self.name
@@ -36,7 +41,7 @@ class Company(models.Model):
 @python_2_unicode_compatible
 class Resume(models.Model):
     resume_file = models.FileField()
-    owner = models.ForeignKey(Person)
+    owner = models.ForeignKey(Person, default=1)
     #user = models.ForeignKey(User, default=1)
     pub_date = models.DateTimeField('date published')
 
