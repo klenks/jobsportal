@@ -1,0 +1,18 @@
+{% extends 'jobportal/base.html' %}
+{% block title %}My resumes{% endblock %}
+{% block body %}
+<h1>My Resumes</h1>
+
+{% if my_resumes_list %}
+    <ul>
+      <h3>Latest job postings</h3>
+    {% for resume in my_resumes_list %}
+    <h5>
+      <a target="_blank" href="{{ resume.resume_file.url }}">{{ resume.name }}</a> {{ resume.pub_date}}</h5>
+    {% endfor %}
+
+{% else %}
+You do not have any resumes uploaded.
+{% endif %}
+
+{% endblock %}

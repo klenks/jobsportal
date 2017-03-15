@@ -3,10 +3,12 @@
 {% block body %}
 <h1>Upload Resume</h1>
 
-{% if latest_job_list %}
+{% if my_resumes_list %}
     <ul>
       <h3>Latest job postings</h3>
-    {% for job in latest_job_list %}
+    {% for resume in my_resumes_list %}
+    <h5>{{ resume.name }} {{ resume.pub_date}}</h5>
+    {% endfor %}
 
 {% else %}
 You do not have any resumes uploaded.

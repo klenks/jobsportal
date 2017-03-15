@@ -14,6 +14,12 @@ from django.template import loader
 
 from datetime import datetime
 
+#from urlparse import urlparse
+# python 3
+#import urllib.request
+#python 2
+import urllib2
+
 from django.conf import settings
 
 #from django.utils.decorators import method_decorator
@@ -199,7 +205,7 @@ class MyResumesView(generic.ListView):
 
     #form_class = ResumeForm
 
-    context_object_name = 'my-resumes-list'
+    context_object_name = 'my_resumes_list'
     template_name = 'jobportal/my_resumes.html'
 
     #def get_context_data(self, **kwargs):
@@ -233,9 +239,11 @@ class ResumeFormView(generic.CreateView):
 
     # process form data
     def post(self, request):
-        form = self.form_class(request.POST)
-
-
+        form = self.form_class(request.POST, request.FILES)
+        #form = ProfileForm(request.POST, request.FILES)
+        print(form.is_valid())
+        print(form.errors)
+        print(form.non_field_errors)
         if form.is_valid():
             # creates object from form but doesn't go into database
             resume = form.save(commit=False)
@@ -244,7 +252,21 @@ class ResumeFormView(generic.CreateView):
             #username = form.cleaned_data['username']
             #password = form.cleaned_data['password']
             #user.set_password(password)
-            resume.resume_file = form.cleaned_data['resume_file']
+            resume.resume_file = request.FILES['resume_file']
+            resume.pub_date = datetime.now()
+            print(request.user)
+            print(Person.objects.get(user=request.user))
+            print("HI")
+            #print(Person.objects.)
+            resume.owner = Person.objects.get(user=request.user)
+            #resume.name = "resume "+str(resume.owner)+" "+resume.pub_date;
+            #resume.name = str(resume.resume_file.url.split('/')[-1])
+
+            # python 3
+            #resume.name = str(urllib.request.unquote(resume.resume_file.url.split('/')[-1]))
+
+            # python 2
+            resume.name = str(urllib2.unquote(resume.resume_file.url.split('/')[-1]))
         #    pub_date =
             #job.pub
             resume.save()

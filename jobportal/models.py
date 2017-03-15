@@ -44,9 +44,10 @@ class Resume(models.Model):
     owner = models.ForeignKey(Person, default=1)
     #user = models.ForeignKey(User, default=1)
     pub_date = models.DateTimeField('date published')
+    name = models.CharField(max_length=200)#, blank=True, null=True)
 
     def __str__(self):
-        return owner.name + " resume "+str(pub_date)
+        return self.name
 
 @python_2_unicode_compatible
 class Job(models.Model):
