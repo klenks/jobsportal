@@ -66,8 +66,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     # third party
 #    'djobberbase.apps.DjobberConfig',
-    'jobportal.apps.JobportalConfig',
-    'stronghold'
+    'stronghold',
+    'jobportal.apps.JobportalConfig'
     #'jobportal'
 
     #'djobberbase.models.Category',
